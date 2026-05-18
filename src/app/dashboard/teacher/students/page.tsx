@@ -1,0 +1,65 @@
+import { DashboardShell } from "@/components/layout/dashboard-shell";
+import { StudentManagementInfo } from "@/components/students/student-management-info";
+import { StudentManager } from "@/components/teacher/student-manager";
+import { requireSession } from "@/lib/auth";
+import { STAFF_TEACHING_ROLES } from "@/lib/roles";
+import { teacherNav } from "@/lib/nav";
+import { getSchoolSettings } from "@/lib/school";
+import { getTeacherStudents } from "@/lib/students";
+import { getTeacherClassesWithStudents } from "@/lib/teacher";
+
+export default async function TeacherStudentsPage() {
+  const user = await requireSession([...STAFF_TEACHING_ROLES]);
+
+  if (!user.schoolId) {
+    return (
+      <DashboardShell user={user} title="Student management" nav={teacherNav}>
+        <p className="text-sm text-[var(--muted)]">
+          No college or school is linked to your account. Sign out and sign in again after your
+          administrator assigns you to an institution.
+        </p>
+      </DashboardShell>
+    );
+  }
+
+  const [classes, students, school] = await Promise.all([
+    getTeacherClassesWithStudents(user.id),
+    getTeacherStudents(user.id),
+    getSchoolSettings(user.schoolId),
+  ]);
+
+  if (!school) {
+    return (
+      <DashboardShell user={user} title="Student management" nav={teacherNav}>
+        <p className="text-sm text-[var(--muted)]">
+          Your institution record could not be loaded. Sign out and sign in again (this can happen
+          after the database is reseeded).
+        </p>
+      </DashboardShell>
+    );
+  }
+
+  return (
+    <DashboardShell
+      user={user}
+      title="Student management"
+      subtitle="Add, edit, delete, and search student records for your classes."
+      nav={teacherNav}
+    >
+      <StudentManagementInfo />
+      <p className="mb-4 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        New student <strong>login accounts</strong> are created by your school administrator
+        (institutional email required). You can edit and search students enrolled in your
+        classes.
+      </p>
+      <StudentManager
+        classes={classes.map((c) => ({ id: c.id, name: c.name }))}
+        students={students}
+        schoolEmailDomain={school.emailDomain}
+        institutionLevel={school.institutionLevel}
+        allowCreate={false}
+        allowEditStudentId={false}
+      />
+    </DashboardShell>
+  );
+}

@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  TEACHER
+  LECTURER
+  STUDENT
+  ADMIN
+  AUTHORITY
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+enum InstitutionLevel {
+  COLLEGE
+  SCHOOL
+}
+
+model School {
+  id               String           @id @default(cuid())
+  name             String
+  university       String?
+  district         String
+  emailDomain      String           @default("school.edu")
+  institutionLevel InstitutionLevel @default(COLLEGE)
+  collegeCode      String?
+  createdAt   DateTime @default(now())
+
+  users   User[]
+  classes Class[]
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  name          String
+  role          Role
+  schoolId      String?
+  studentNumber String?
+  department    String?
+  yearOfStudy   String?
+  createdAt     DateTime @default(now())
+
+  school            School?            @relation(fields: [schoolId], references: [id])
+  taughtClasses     Class[]            @relation("ClassTeacher")
+  enrollments       Enrollment[]
+  attendanceRecords AttendanceRecord[] @relation("StudentAttendance")
+  grades            Grade[]
+
+  @@unique([schoolId, studentNumber])
+}
+
+model Class {
+  id        String   @id @default(cuid())
+  name      String
+  subject   String
+  gradeLevel Int
+  schoolId  String
+  teacherId String
+  createdAt DateTime @default(now())
+
+  school            School             @relation(fields: [schoolId], references: [id])
+  teacher           User               @relation("ClassTeacher", fields: [teacherId], references: [id])
+  enrollments       Enrollment[]
+  attendanceRecords AttendanceRecord[]
+  grades            Grade[]
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  studentId String
+  classId   String
+  createdAt DateTime @default(now())
+
+  student User  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, classId])
+}
+
+model AttendanceRecord {
+  id        String           @id @default(cuid())
+  studentId String
+  classId   String
+  date      DateTime
+  status    AttendanceStatus
+  createdAt DateTime         @default(now())
+
+  student User  @relation("StudentAttendance", fields: [studentId], references: [id], onDelete: Cascade)
+  class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, classId, date])
+}
+
+model Grade {
+  id         String   @id @default(cuid())
+  studentId  String
+  classId    String
+  title      String
+  score      Float
+  maxScore   Float    @default(100)
+  recordedAt DateTime @default(now())
+
+  student User  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+}

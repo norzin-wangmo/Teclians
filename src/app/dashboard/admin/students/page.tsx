@@ -1,6 +1,5 @@
 import { DashboardShell } from "@/components/layout/dashboard-shell";
-import { StudentManagementInfo } from "@/components/students/student-management-info";
-import { StudentManager } from "@/components/teacher/student-manager";
+import { AdminStudentsByClass } from "@/components/admin/admin-students-by-class";
 import { requireSession } from "@/lib/auth";
 import { adminNav } from "@/lib/nav";
 import { getSchoolSettings } from "@/lib/school";
@@ -32,8 +31,7 @@ export default async function AdminStudentsPage() {
     return (
       <DashboardShell user={user} title="Student management" nav={adminNav}>
         <p className="text-sm text-[var(--muted)]">
-          Your institution record could not be loaded. Sign out and sign in again (this can happen
-          after the database is reseeded).
+          Your institution record could not be loaded. Sign out and sign in again.
         </p>
       </DashboardShell>
     );
@@ -43,16 +41,14 @@ export default async function AdminStudentsPage() {
     <DashboardShell
       user={user}
       title="Student management"
-      subtitle="Manage all student records for your school — add, edit, delete, and search."
+      subtitle="Choose a class to view students sorted by year and department."
       nav={adminNav}
     >
-      <StudentManagementInfo />
-      <StudentManager
+      <AdminStudentsByClass
         classes={classes}
         students={students}
         schoolEmailDomain={school.emailDomain}
         institutionLevel={school.institutionLevel}
-        canDelete
       />
     </DashboardShell>
   );

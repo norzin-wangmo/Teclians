@@ -5,7 +5,9 @@ export async function getTeacherClassesWithStudents(teacherId: string) {
     where: { teacherId },
     include: {
       enrollments: {
-        include: { student: { select: { id: true, name: true } } },
+        include: {
+          student: { select: { id: true, name: true, studentNumber: true } },
+        },
       },
     },
     orderBy: { name: "asc" },
@@ -17,6 +19,7 @@ export async function getTeacherClassesWithStudents(teacherId: string) {
     students: cls.enrollments.map((e) => ({
       id: e.student.id,
       name: e.student.name,
+      studentNumber: e.student.studentNumber,
     })),
   }));
 }

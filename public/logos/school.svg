@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Ministry of Education">
+  <rect width="64" height="64" rx="12" fill="#0f766e"/>
+  <path d="M32 14 L52 26 L52 50 L12 50 L12 26 Z" fill="#ffffff" opacity="0.95"/>
+  <rect x="26" y="36" width="12" height="14" fill="#0f766e"/>
+  <text x="32" y="58" text-anchor="middle" fill="#ffffff" font-family="system-ui,sans-serif" font-size="7" font-weight="600">MoE</text>
+</svg>

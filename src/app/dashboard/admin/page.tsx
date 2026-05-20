@@ -1,28 +1,22 @@
-import Link from "next/link";
-import { Building2, FileBarChart, GraduationCap, Users } from "lucide-react";
+import { Building2, GraduationCap, Users } from "lucide-react";
 import { AttendanceTrendChart } from "@/components/charts/attendance-trend-chart";
 import { ClassPerformanceChart } from "@/components/charts/class-performance-chart";
-import { SubjectPerformanceChart } from "@/components/charts/subject-performance-chart";
-import { AdminFunctions } from "@/components/admin/admin-functions";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { StatCard } from "@/components/ui/stat-card";
 import { DataPanel } from "@/components/ui/data-panel";
 import { PrivacyNotice } from "@/components/ui/privacy-notice";
 import { requireSession } from "@/lib/auth";
-import {
-  getMonthlyAttendanceTrend,
-  getSchoolAnalytics,
-  getSubjectWisePerformance,
-} from "@/lib/analytics";
+import { getMonthlyAttendanceTrend, getSchoolAnalytics } from "@/lib/analytics";
 import { adminNav } from "@/lib/nav";
 import { prisma } from "@/lib/prisma";
 import { formatInstitution } from "@/lib/school";
+import { summarizeAttendance } from "@/lib/analytics";
 
 export default async function AdminDashboardPage() {
   const user = await requireSession(["ADMIN"]);
   if (!user.schoolId) {
     return (
-      <DashboardShell user={user} title="School administrator dashboard">
+      <DashboardShell user={user} title="School administrator dashboard" nav={adminNav}>
         <p className="text-sm text-[var(--muted)]">No school is linked to this account.</p>
       </DashboardShell>
     );
@@ -30,7 +24,6 @@ export default async function AdminDashboardPage() {
 
   const school = await getSchoolAnalytics(user.schoolId);
   const trend = await getMonthlyAttendanceTrend({ schoolId: user.schoolId });
-  const subjects = await getSubjectWisePerformance({ schoolId: user.schoolId });
 
   const classes = await prisma.class.findMany({
     where: { schoolId: user.schoolId },
@@ -50,7 +43,6 @@ export default async function AdminDashboardPage() {
         }),
         prisma.enrollment.count({ where: { classId: cls.id } }),
       ]);
-      const { summarizeAttendance } = await import("@/lib/analytics");
       const attendance = summarizeAttendance(records);
       const averageGrade =
         grades.length === 0
@@ -80,27 +72,16 @@ export default async function AdminDashboardPage() {
       title="School administration"
       subtitle={
         school
-          ? `${formatInstitution({ name: school.schoolName, university: school.universityName }).full} · ${school.district} — aggregated monitoring without individual student records.`
+          ? `${formatInstitution({ name: school.schoolName, university: school.universityName }).full} · ${school.district} — use the menu for cohort performance, students, and teachers.`
           : "School-wide analytics"
       }
       nav={adminNav}
     >
-      <AdminFunctions />
       <PrivacyNotice />
 
       {school ? (
         <>
-          <div className="mb-6 flex justify-end">
-            <Link
-              href="/dashboard/admin/report"
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-            >
-              <FileBarChart className="h-4 w-4" />
-              School performance report
-            </Link>
-          </div>
-
-          <div id="analytics" className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard label="Students" value={school.studentCount} icon={Users} tone="blue" />
             <StatCard label="Classes" value={school.classCount} icon={GraduationCap} tone="teal" />
             <StatCard
@@ -124,12 +105,6 @@ export default async function AdminDashboardPage() {
             </DataPanel>
             <DataPanel title="Performance by class (aggregated)">
               <ClassPerformanceChart classes={classAnalytics} />
-            </DataPanel>
-          </div>
-
-          <div id="summaries" className="mb-8">
-            <DataPanel title="Subject-wise performance">
-              <SubjectPerformanceChart subjects={subjects} />
             </DataPanel>
           </div>
 

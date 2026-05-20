@@ -7,6 +7,7 @@ import {
 } from "@/lib/account-naming";
 import { validateStaffEmail } from "@/lib/email-policy";
 import { prisma } from "@/lib/prisma";
+import { syncTeacherModules } from "@/lib/sync-teacher-classes";
 
 const ALLOWED_CREATE_ROLES: Role[] = ["TEACHER", "LECTURER"];
 
@@ -21,6 +22,9 @@ export async function POST(request: Request) {
   let name = String(body.name ?? "").trim();
   const password = String(body.password ?? "password123");
   const roleInput = String(body.role ?? "TEACHER").toUpperCase();
+  const modules = Array.isArray(body.modules)
+    ? body.modules.map((m: unknown) => String(m).trim()).filter(Boolean)
+    : [];
 
   if (!email) {
     return NextResponse.json({ error: "Education email is required" }, { status: 400 });
@@ -47,6 +51,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: nameError }, { status: 400 });
   }
 
+  if (modules.length === 0) {
+    return NextResponse.json(
+      { error: "Select at least one module the teacher will teach" },
+      { status: 400 },
+    );
+  }
+
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
     return NextResponse.json({ error: "Email already in use" }, { status: 409 });
@@ -61,6 +72,8 @@ export async function POST(request: Request) {
       schoolId: session.schoolId,
     },
   });
+
+  await syncTeacherModules(session.schoolId, staff.id, name, modules);
 
   return NextResponse.json({
     id: staff.id,

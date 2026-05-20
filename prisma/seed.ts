@@ -81,6 +81,7 @@ async function main() {
       name: "Karma Gayley",
       role: "TEACHER",
       schoolId: cstId,
+      modulesTaught: "Software Engineering, Engineering Mathematics",
       passwordHash,
     },
   });
@@ -142,6 +143,7 @@ async function main() {
       name: "Teacher Motithang",
       role: "TEACHER",
       schoolId: motithang.id,
+      modulesTaught: "Science",
       passwordHash,
     },
   });
@@ -151,6 +153,8 @@ async function main() {
       email: "201.00310.11.0036@education.gov.bt",
       name: "Tashi phuntsho",
       studentNumber: "201.00310.11.0036",
+      department: "Science",
+      yearOfStudy: "Grade XII",
       role: "STUDENT",
       schoolId: motithang.id,
       passwordHash,

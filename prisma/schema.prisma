@@ -51,6 +51,8 @@ model User {
   studentNumber String?
   department    String?
   yearOfStudy   String?
+  /** Comma-separated module/subject names the teacher is assigned to teach */
+  modulesTaught String?
   createdAt     DateTime @default(now())
 
   school            School?            @relation(fields: [schoolId], references: [id])

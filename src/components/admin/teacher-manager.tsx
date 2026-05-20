@@ -2,22 +2,38 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
   emailLocalPart,
   formatStaffNameFromEmail,
 } from "@/lib/account-naming";
 import { EDUCATION_EMAIL_HINT } from "@/lib/email-policy";
 import { STAFF_ROLE_LABELS } from "@/lib/roles";
+import { parseModulesTaught } from "@/lib/teaching-modules";
 
-type StaffRow = { id: string; name: string; email: string; role: "TEACHER" | "LECTURER" };
+type StaffRow = {
+  id: string;
+  name: string;
+  email: string;
+  role: "TEACHER" | "LECTURER";
+  modulesTaught: string | null;
+};
 
-export function TeacherManager({ teachers }: { teachers: StaffRow[] }) {
+export function TeacherManager({
+  teachers,
+  moduleOptions,
+}: {
+  teachers: StaffRow[];
+  moduleOptions: string[];
+}) {
   const router = useRouter();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"TEACHER" | "LECTURER">("TEACHER");
+  const [selectedModules, setSelectedModules] = useState<string[]>([]);
+  const [customModule, setCustomModule] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -27,6 +43,8 @@ export function TeacherManager({ teachers }: { teachers: StaffRow[] }) {
     setEmail("");
     setPassword("");
     setRole("TEACHER");
+    setSelectedModules([]);
+    setCustomModule("");
   }
 
   function startEdit(staff: StaffRow) {
@@ -34,16 +52,41 @@ export function TeacherManager({ teachers }: { teachers: StaffRow[] }) {
     setName(staff.name);
     setEmail(staff.email);
     setRole(staff.role);
+    setSelectedModules(parseModulesTaught(staff.modulesTaught));
     setPassword("");
     setMessage("");
   }
 
+  function toggleModule(module: string) {
+    setSelectedModules((prev) =>
+      prev.includes(module) ? prev.filter((m) => m !== module) : [...prev, module],
+    );
+  }
+
+  function addCustomModule() {
+    const trimmed = customModule.trim();
+    if (!trimmed || selectedModules.includes(trimmed)) return;
+    setSelectedModules((prev) => [...prev, trimmed]);
+    setCustomModule("");
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (selectedModules.length === 0) {
+      setMessage("Select at least one module the teacher will teach.");
+      return;
+    }
+
     setLoading(true);
     setMessage("");
 
-    const payload = { name, email, role, ...(password ? { password } : {}) };
+    const payload = {
+      name,
+      email,
+      role,
+      modules: selectedModules,
+      ...(password ? { password } : {}),
+    };
     const res = await fetch(
       editingId ? `/api/admin/teachers/${editingId}` : "/api/admin/teachers",
       {
@@ -74,8 +117,9 @@ export function TeacherManager({ teachers }: { teachers: StaffRow[] }) {
     <div className="space-y-6">
       <p className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-900">
         Only <strong>Teacher</strong> and <strong>Lecturer</strong> accounts can be created here.
-        The display name must <strong>start with the education email account</strong> (the part
-        before @). {EDUCATION_EMAIL_HINT}
+        Specify which <strong>modules</strong> they teach — a class is created for each module if
+        needed. The display name must <strong>start with the education email account</strong>.{" "}
+        {EDUCATION_EMAIL_HINT}
       </p>
 
       <form onSubmit={handleSubmit} className="rounded-xl border border-[var(--border)] bg-slate-50 p-4">
@@ -129,14 +173,48 @@ export function TeacherManager({ teachers }: { teachers: StaffRow[] }) {
             <label className="mb-1 block text-xs font-medium text-slate-700">
               Password {editingId ? "(optional)" : "(default: password123)"}
             </label>
-            <input
-              type="password"
+            <PasswordInput
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm"
+              onChange={setPassword}
+              className="w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm outline-none ring-blue-500 focus:ring-2"
             />
           </div>
         </div>
+
+        <fieldset className="mt-4">
+          <legend className="text-xs font-medium text-slate-700">Modules taught *</legend>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {moduleOptions.map((module) => (
+              <label
+                key={module}
+                className="flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedModules.includes(module)}
+                  onChange={() => toggleModule(module)}
+                />
+                {module}
+              </label>
+            ))}
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <input
+              value={customModule}
+              onChange={(e) => setCustomModule(e.target.value)}
+              placeholder="Add another module…"
+              className="min-w-[180px] flex-1 rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm"
+            />
+            <button
+              type="button"
+              onClick={addCustomModule}
+              className="rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium"
+            >
+              Add module
+            </button>
+          </div>
+        </fieldset>
+
         <div className="mt-4 flex gap-2">
           <button
             type="submit"
@@ -178,6 +256,9 @@ export function TeacherManager({ teachers }: { teachers: StaffRow[] }) {
                 </span>
               </p>
               <p className="text-[var(--muted)]">{staff.email}</p>
+              {staff.modulesTaught ? (
+                <p className="mt-1 text-xs text-slate-700">Modules: {staff.modulesTaught}</p>
+              ) : null}
             </div>
             <button
               type="button"

@@ -8,6 +8,7 @@ import {
 import { validateStaffEmail } from "@/lib/email-policy";
 import { STAFF_TEACHING_ROLES } from "@/lib/roles";
 import { prisma } from "@/lib/prisma";
+import { syncTeacherModules } from "@/lib/sync-teacher-classes";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -35,6 +36,12 @@ export async function PUT(request: Request, { params }: Params) {
   const email = body.email !== undefined ? String(body.email).trim().toLowerCase() : undefined;
   const password = body.password ? String(body.password) : undefined;
   const roleInput = body.role !== undefined ? String(body.role).toUpperCase() : undefined;
+  const modules =
+    body.modules !== undefined
+      ? Array.isArray(body.modules)
+        ? body.modules.map((m: unknown) => String(m).trim()).filter(Boolean)
+        : []
+      : undefined;
 
   if (roleInput && !STAFF_TEACHING_ROLES.includes(roleInput as Role)) {
     return NextResponse.json(
@@ -78,6 +85,21 @@ export async function PUT(request: Request, { params }: Params) {
       ...(roleInput ? { role: roleInput as "TEACHER" | "LECTURER" } : {}),
     },
   });
+
+  if (modules !== undefined) {
+    if (modules.length === 0) {
+      return NextResponse.json(
+        { error: "Select at least one module the teacher will teach" },
+        { status: 400 },
+      );
+    }
+    await syncTeacherModules(
+      session.schoolId,
+      updated.id,
+      updated.name,
+      modules,
+    );
+  }
 
   return NextResponse.json({
     id: updated.id,

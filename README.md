@@ -20,11 +20,35 @@
 
 ```bash
 npm install
-npm run db:setup
+npm run setup
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+`npm run setup` creates `.env` from `.env.example` (if missing), applies the database schema, and loads demo users.
+
+### Running on another laptop (or after a crash)
+
+The database and `.env` file are **not** in git. Each machine needs its own copy:
+
+```bash
+git clone <your-repo>
+cd Teclians
+npm install
+npm run setup
+npm run dev
+```
+
+Check the server is ready: [http://localhost:3000/api/health](http://localhost:3000/api/health) should return `"ok": true`.
+
+| Problem | Fix |
+|---------|-----|
+| Login always fails / “Invalid password” | Run `npm run setup` (empty database has no users) |
+| App crashes on start | Ensure Node.js 18+ (`node -v`). Delete `.next` and run `npm run dev` again |
+| `AUTH_SECRET is not set` | Copy `.env.example` to `.env` or run `npm run setup` |
+| Stuck after old data | Sign out, or open `/api/auth/logout`, then sign in again |
+| Wrong login for students | Use **student ID** only (e.g. `02250359.cst`), not the email address |
 
 ### Institutions in demo data
 
@@ -50,8 +74,9 @@ Staff sign in with education email. Students sign in with **student ID only** (n
 |----------------|--------------------------------------|
 | `npm run dev`  | Start development server             |
 | `npm run build`| Production build                     |
-| `npm run db:setup` | Push schema and seed demo data   |
-| `npm run db:seed`  | Re-seed database only            |
+| `npm run setup`    | First-time setup (.env + DB + seed) |
+| `npm run db:setup` | Push schema and seed demo data      |
+| `npm run db:seed`  | Re-seed database only               |
 
 ## Project objectives
 

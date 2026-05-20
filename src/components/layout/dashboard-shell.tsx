@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { GraduationCap, LogOut } from "lucide-react";
+import { InstitutionBadge } from "@/components/layout/institution-badge";
+import type { InstitutionBranding } from "@/lib/institution";
 import type { SessionUser } from "@/lib/types";
 import { dashboardPath } from "@/lib/auth";
 import { DashboardNav, type NavItem } from "@/components/layout/dashboard-nav";
@@ -17,12 +19,14 @@ export function DashboardShell({
   title,
   subtitle,
   nav,
+  institution,
   children,
 }: {
   user: SessionUser;
   title: string;
   subtitle?: string;
   nav?: NavItem[];
+  institution?: InstitutionBranding | null;
   children: React.ReactNode;
 }) {
   return (
@@ -39,6 +43,12 @@ export function DashboardShell({
             </div>
           </Link>
           <div className="flex items-center gap-4">
+            {institution &&
+            (user.role === "TEACHER" ||
+              user.role === "LECTURER" ||
+              user.role === "STUDENT") ? (
+              <InstitutionBadge institution={institution} />
+            ) : null}
             <div className="hidden text-right sm:block">
               <p className="text-sm font-medium text-slate-900">{user.name}</p>
               <p className="text-xs text-[var(--muted)]">{user.email}</p>

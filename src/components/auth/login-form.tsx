@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { PasswordInput } from "@/components/ui/password-input";
 import { EDUCATION_EMAIL_HINT } from "@/lib/email-policy";
 
 const demoAccounts = [
@@ -72,12 +73,10 @@ export function LoginForm() {
         <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-slate-700">
           Password
         </label>
-        <input
+        <PasswordInput
           id="password"
-          type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm outline-none ring-blue-500 focus:ring-2"
+          onChange={setPassword}
           required
         />
       </div>

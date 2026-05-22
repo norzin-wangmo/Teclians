@@ -1,29 +1,29 @@
 import { DashboardShell } from "@/components/layout/dashboard-shell";
-import { AtRiskStudents } from "@/components/teacher/at-risk-students";
+import { StudentMarksViewer } from "@/components/teacher/student-marks-viewer";
 import { DataPanel } from "@/components/ui/data-panel";
 import { requireSession } from "@/lib/auth";
-import { getStudentsRequiringAttention } from "@/lib/at-risk";
 import { getInstitutionBranding } from "@/lib/institution";
 import { lecturerNav } from "@/lib/nav";
 import { STAFF_TEACHING_ROLES } from "@/lib/roles";
+import { getTeacherMarksSheets } from "@/lib/teacher-marks";
 
-export default async function TeacherAtRiskPage() {
+export default async function TeacherMarksPage() {
   const user = await requireSession([...STAFF_TEACHING_ROLES]);
-  const [atRisk, institution] = await Promise.all([
-    getStudentsRequiringAttention(user.id),
+  const [sheets, institution] = await Promise.all([
+    getTeacherMarksSheets(user.id),
     getInstitutionBranding(user.schoolId),
   ]);
 
   return (
     <DashboardShell
       user={user}
-      title="Students requiring attention"
-      subtitle="Students flagged for low attendance or grades in your classes."
+      title="Student marks"
+      subtitle="View each student's scores for quizzes, assignments, midterms, and other assessments."
       nav={lecturerNav}
       institution={institution}
     >
-      <DataPanel title="At-risk students">
-        <AtRiskStudents students={atRisk} />
+      <DataPanel title="Marks by class and assessment">
+        <StudentMarksViewer sheets={sheets} />
       </DataPanel>
     </DashboardShell>
   );

@@ -3,7 +3,7 @@ import { StudentManagementInfo } from "@/components/students/student-management-
 import { StudentManager } from "@/components/teacher/student-manager";
 import { requireSession } from "@/lib/auth";
 import { STAFF_TEACHING_ROLES } from "@/lib/roles";
-import { teacherNav } from "@/lib/nav";
+import { lecturerNav } from "@/lib/nav";
 import { getInstitutionBranding } from "@/lib/institution";
 import { getSchoolSettings } from "@/lib/school";
 import { getTeacherStudents } from "@/lib/students";
@@ -14,7 +14,7 @@ export default async function TeacherStudentsPage() {
 
   if (!user.schoolId) {
     return (
-      <DashboardShell user={user} title="Student management" nav={teacherNav}>
+      <DashboardShell user={user} title="Student management" nav={lecturerNav}>
         <p className="text-sm text-[var(--muted)]">
           No college or school is linked to your account. Sign out and sign in again after your
           administrator assigns you to an institution.
@@ -32,7 +32,7 @@ export default async function TeacherStudentsPage() {
 
   if (!school) {
     return (
-      <DashboardShell user={user} title="Student management" nav={teacherNav}>
+      <DashboardShell user={user} title="Student management" nav={lecturerNav}>
         <p className="text-sm text-[var(--muted)]">
           Your institution record could not be loaded. Sign out and sign in again (this can happen
           after the database is reseeded).
@@ -46,7 +46,7 @@ export default async function TeacherStudentsPage() {
       user={user}
       title="Student management"
       subtitle="Add, edit, delete, and search student records for your classes."
-      nav={teacherNav}
+      nav={lecturerNav}
       institution={institution}
     >
       <StudentManagementInfo />

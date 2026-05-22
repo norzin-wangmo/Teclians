@@ -89,7 +89,7 @@ export async function PUT(request: Request, { params }: Params) {
   if (modules !== undefined) {
     if (modules.length === 0) {
       return NextResponse.json(
-        { error: "Select at least one module the teacher will teach" },
+        { error: "Select at least one module they will teach" },
         { status: 400 },
       );
     }

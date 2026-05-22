@@ -50,3 +50,10 @@ export type SubjectPerformance = {
   classCount: number;
   enrollmentCount: number;
 };
+
+export type ModuleAnalytics = {
+  module: string;
+  attendanceRate: number;
+  averageGrade: number;
+  sessionsHeld: number;
+};

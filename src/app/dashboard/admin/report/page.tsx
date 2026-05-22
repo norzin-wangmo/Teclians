@@ -10,13 +10,16 @@ import {
 import { prisma } from "@/lib/prisma";
 
 import { adminNav } from "@/lib/nav";
-import { formatInstitution } from "@/lib/school";
+import { formatInstitution, getSchoolSettings } from "@/lib/school";
 
 export default async function AdminReportPage() {
   const user = await requireSession(["ADMIN"]);
+  const schoolMeta = user.schoolId ? await getSchoolSettings(user.schoolId) : null;
+  const nav = adminNav(schoolMeta?.institutionLevel);
+
   if (!user.schoolId) {
     return (
-      <DashboardShell user={user} title="School report" nav={adminNav}>
+      <DashboardShell user={user} title="School report" nav={nav}>
         <p className="text-sm text-[var(--muted)]">No school linked.</p>
       </DashboardShell>
     );
@@ -31,7 +34,7 @@ export default async function AdminReportPage() {
 
   if (!school) {
     return (
-      <DashboardShell user={user} title="School report" nav={adminNav}>
+      <DashboardShell user={user} title="School report" nav={nav}>
         <p className="text-sm text-[var(--muted)]">School data unavailable.</p>
       </DashboardShell>
     );
@@ -42,7 +45,7 @@ export default async function AdminReportPage() {
       user={user}
       title="School performance report"
       subtitle="Aggregated monitoring report — no individual student identifiers."
-      nav={adminNav}
+      nav={nav}
     >
       <PrivacyNotice />
 
@@ -115,7 +118,7 @@ export default async function AdminReportPage() {
 
         <footer className="border-t border-[var(--border)] pt-4 text-xs text-[var(--muted)]">
           This report contains aggregated statistics only. Individual student records are
-          accessible to teachers and students through their respective accounts.
+          accessible to teachers, lecturers, and students through their respective accounts.
         </footer>
       </article>
     </DashboardShell>

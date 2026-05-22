@@ -20,7 +20,7 @@ const features = [
     icon: ShieldCheck,
     title: "Role-based access permissions",
     description:
-      "Teachers, students, administrators, and ministry officials each see only what their role allows.",
+      "Lecturers, teachers, students, administrators, and ministry officials each see only what their role allows.",
   },
   {
     icon: KeyRound,

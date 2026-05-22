@@ -8,12 +8,21 @@ import {
   getCohortClassPerformance,
 } from "@/lib/admin-class-performance";
 import { adminNav } from "@/lib/nav";
+import { getSchoolSettings } from "@/lib/school";
 
 export default async function AdminClassPerformancePage() {
   const user = await requireSession(["ADMIN"]);
+  const school = user.schoolId ? await getSchoolSettings(user.schoolId) : null;
+  const nav = adminNav(school?.institutionLevel);
+  const isCollege = school?.institutionLevel !== "SCHOOL";
+
   if (!user.schoolId) {
     return (
-      <DashboardShell user={user} title="Class performance" nav={adminNav}>
+      <DashboardShell
+        user={user}
+        title={isCollege ? "Module performance" : "Class performance"}
+        nav={nav}
+      >
         <p className="text-sm text-[var(--muted)]">No school linked to this account.</p>
       </DashboardShell>
     );
@@ -33,9 +42,9 @@ export default async function AdminClassPerformancePage() {
   return (
     <DashboardShell
       user={user}
-      title="Class performance by cohort"
+      title={isCollege ? "Module performance by cohort" : "Class performance by cohort"}
       subtitle="Select department and year to view module averages and students with attendance below 90%."
-      nav={adminNav}
+      nav={nav}
     >
       <PrivacyNotice />
       <DataPanel title="Cohort performance">

@@ -75,23 +75,13 @@ async function main() {
     },
   });
 
-  const teacher = await prisma.user.create({
+  const cstLecturer = await prisma.user.create({
     data: {
       email: "karmagayley.cst@rub.edu.bt",
       name: "Karma Gayley",
-      role: "TEACHER",
-      schoolId: cstId,
-      modulesTaught: "Software Engineering, Engineering Mathematics",
-      passwordHash,
-    },
-  });
-
-  await prisma.user.create({
-    data: {
-      email: "lecturer.cst@rub.edu.bt",
-      name: "Lecturer Cst",
       role: "LECTURER",
       schoolId: cstId,
+      modulesTaught: "Software Engineering, Engineering Mathematics",
       passwordHash,
     },
   });
@@ -104,10 +94,34 @@ async function main() {
       department: "Software Engineering",
       yearOfStudy: "Year 1",
     },
-    { studentNumber: "02250360.cst", email: "02250360.cst@rub.edu.bt", name: "02250360.cst" },
-    { studentNumber: "02250361.cst", email: "02250361.cst@rub.edu.bt", name: "02250361.cst" },
-    { studentNumber: "02250362.cst", email: "02250362.cst@rub.edu.bt", name: "02250362.cst" },
-    { studentNumber: "02250363.cst", email: "02250363.cst@rub.edu.bt", name: "02250363.cst" },
+    {
+      studentNumber: "02250360.cst",
+      email: "02250360.cst@rub.edu.bt",
+      name: "Tshering Dorji",
+      department: "Software Engineering",
+      yearOfStudy: "Year 1",
+    },
+    {
+      studentNumber: "02250361.cst",
+      email: "02250361.cst@rub.edu.bt",
+      name: "Pema Lhamo",
+      department: "Software Engineering",
+      yearOfStudy: "Year 1",
+    },
+    {
+      studentNumber: "02250362.cst",
+      email: "02250362.cst@rub.edu.bt",
+      name: "Kinley Wangchuk",
+      department: "Software Engineering",
+      yearOfStudy: "Year 1",
+    },
+    {
+      studentNumber: "02250363.cst",
+      email: "02250363.cst@rub.edu.bt",
+      name: "Sonam Choden",
+      department: "Software Engineering",
+      yearOfStudy: "Year 1",
+    },
   ];
 
   const cstStudents = await Promise.all(
@@ -167,7 +181,7 @@ async function main() {
       subject: "Software Engineering",
       gradeLevel: 1,
       schoolId: cstId,
-      teacherId: teacher.id,
+      teacherId: cstLecturer.id,
     },
   });
 
@@ -177,7 +191,7 @@ async function main() {
       subject: "Engineering Mathematics",
       gradeLevel: 1,
       schoolId: cstId,
-      teacherId: teacher.id,
+      teacherId: cstLecturer.id,
     },
   });
 
@@ -338,7 +352,7 @@ async function main() {
   console.log(`  School-level: ${DEMO_SECONDARY_SCHOOL.name}`);
   console.log(`  Authority:  ${authority.email}`);
   console.log(`  CST admin:  ${admin.email}`);
-  console.log(`  CST teacher: ${teacher.email}`);
+  console.log(`  CST lecturer: ${cstLecturer.email}`);
   console.log(
     `  CST student (Norzin): ${cstStudents[0].studentNumber} — Software Engineering, Year 1`,
   );

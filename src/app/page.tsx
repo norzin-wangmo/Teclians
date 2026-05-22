@@ -11,7 +11,7 @@ import { dashboardPath, resolveSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 const roles = [
-  "Teachers",
+  "Lecturers & teachers",
   "School Administrators",
   "Students",
   "Education Ministry Officials",
@@ -80,7 +80,7 @@ export default async function HomePage() {
             Monitor student performance with clarity and confidence
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-[var(--muted)]">
-            A responsive web platform for schools and educational institutions. Teachers record
+            A responsive web platform for schools and colleges. Lecturers and teachers record
             attendance and marks digitally; dashboards and reports are generated automatically
             for monitoring and decision support.
           </p>
@@ -103,7 +103,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <h2 className="text-lg font-semibold text-slate-900">System scope</h2>
             <p className="mt-2 max-w-2xl text-sm text-[var(--muted)]">
-              Supports teachers, school administrators, students, and education ministry officials.
+              Supports college lecturers, high school teachers, administrators, students, and ministry officials.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {roles.map((role) => (

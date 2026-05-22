@@ -2,7 +2,7 @@ import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { TeacherRecordPanel } from "@/components/teacher/teacher-record-panel";
 import { requireSession } from "@/lib/auth";
 import { getInstitutionBranding } from "@/lib/institution";
-import { teacherNav } from "@/lib/nav";
+import { lecturerNav } from "@/lib/nav";
 import { STAFF_TEACHING_ROLES } from "@/lib/roles";
 import { getTeacherClassesWithStudents } from "@/lib/teacher";
 import { prisma } from "@/lib/prisma";
@@ -37,7 +37,7 @@ export default async function TeacherRecordPage() {
       user={user}
       title="Record class data"
       subtitle="Attendance, assignment marks, quizzes, and updating existing marks."
-      nav={teacherNav}
+      nav={lecturerNav}
       institution={institution}
     >
       <TeacherRecordPanel classes={classOptions} grades={gradeRows} />

@@ -2,21 +2,15 @@ import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PrintReportButton } from "@/components/reports/print-report-button";
 import { requireSession } from "@/lib/auth";
 import { STAFF_TEACHING_ROLES } from "@/lib/roles";
-import {
-  getMonthlyAttendanceTrend,
-  getSubjectWisePerformance,
-  getTeacherClassAnalytics,
-} from "@/lib/analytics";
+import { getTeacherModuleAnalytics } from "@/lib/analytics";
 import { prisma } from "@/lib/prisma";
 
-import { teacherNav } from "@/lib/nav";
+import { lecturerNav } from "@/lib/nav";
 import { formatInstitution } from "@/lib/school";
 
 export default async function TeacherReportPage() {
   const user = await requireSession([...STAFF_TEACHING_ROLES]);
-  const classes = await getTeacherClassAnalytics(user.id);
-  const subjects = await getSubjectWisePerformance({ teacherId: user.id });
-  const trend = await getMonthlyAttendanceTrend({ schoolId: user.schoolId ?? undefined });
+  const modules = await getTeacherModuleAnalytics(user.id);
 
   const school = user.schoolId
     ? await prisma.school.findUnique({ where: { id: user.schoolId } })
@@ -27,9 +21,9 @@ export default async function TeacherReportPage() {
   return (
     <DashboardShell
       user={user}
-      title="Class monitoring report"
-      subtitle="Printable summary of your classes, attendance trends, and subject performance."
-      nav={teacherNav}
+      title="Module monitoring report"
+      subtitle="Printable summary of your modules, classes held this semester, and attendance."
+      nav={lecturerNav}
     >
       <div className="report-actions mb-6 flex items-center justify-between gap-4">
         <p className="text-sm text-[var(--muted)]">Generated {generatedAt}</p>
@@ -46,70 +40,38 @@ export default async function TeacherReportPage() {
                 }).full
               : "School"}
           </p>
-          <h2 className="text-xl font-semibold text-slate-900">Teacher class report</h2>
+          <h2 className="text-xl font-semibold text-slate-900">Lecturer module report</h2>
           <p className="text-sm text-[var(--muted)]">Prepared by {user.name}</p>
         </header>
 
         <section>
-          <h3 className="mb-3 font-semibold text-slate-900">Class summary</h3>
+          <h3 className="mb-3 font-semibold text-slate-900">Module attendance (current semester)</h3>
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-[var(--border)] text-[var(--muted)]">
-                <th className="py-2 pr-4">Class</th>
-                <th className="py-2 pr-4">Subject</th>
-                <th className="py-2 pr-4">Students</th>
-                <th className="py-2 pr-4">Attendance</th>
-                <th className="py-2">Avg grade</th>
+                <th className="py-2 pr-4">Module</th>
+                <th className="py-2 pr-4">Classes held</th>
+                <th className="py-2">Attendance</th>
               </tr>
             </thead>
             <tbody>
-              {classes.map((cls) => (
-                <tr key={cls.classId} className="border-b border-[var(--border)]">
-                  <td className="py-2 pr-4 font-medium">{cls.className}</td>
-                  <td className="py-2 pr-4">{cls.subject}</td>
-                  <td className="py-2 pr-4">{cls.studentCount}</td>
-                  <td className="py-2 pr-4">{cls.attendanceRate}%</td>
-                  <td className="py-2">{cls.averageGrade}%</td>
+              {modules.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="py-4 text-[var(--muted)]">
+                    No module data recorded yet.
+                  </td>
                 </tr>
-              ))}
+              ) : (
+                modules.map((row) => (
+                  <tr key={row.module} className="border-b border-[var(--border)]">
+                    <td className="py-2 pr-4 font-medium">{row.module}</td>
+                    <td className="py-2 pr-4">{row.sessionsHeld}</td>
+                    <td className="py-2">{row.attendanceRate}%</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
-        </section>
-
-        <section>
-          <h3 className="mb-3 font-semibold text-slate-900">Subject-wise performance</h3>
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-[var(--border)] text-[var(--muted)]">
-                <th className="py-2 pr-4">Subject</th>
-                <th className="py-2 pr-4">Classes</th>
-                <th className="py-2 pr-4">Attendance</th>
-                <th className="py-2">Avg grade</th>
-              </tr>
-            </thead>
-            <tbody>
-              {subjects.map((s) => (
-                <tr key={s.subject} className="border-b border-[var(--border)]">
-                  <td className="py-2 pr-4 font-medium">{s.subject}</td>
-                  <td className="py-2 pr-4">{s.classCount}</td>
-                  <td className="py-2 pr-4">{s.attendanceRate}%</td>
-                  <td className="py-2">{s.averageGrade}%</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-
-        <section>
-          <h3 className="mb-3 font-semibold text-slate-900">Attendance trend (6 months)</h3>
-          <ul className="flex flex-wrap gap-3 text-sm">
-            {trend.labels.map((label, i) => (
-              <li key={label} className="rounded-lg bg-slate-50 px-3 py-2">
-                <span className="text-[var(--muted)]">{label}:</span>{" "}
-                <strong>{trend.rates[i]}%</strong>
-              </li>
-            ))}
-          </ul>
         </section>
       </article>
     </DashboardShell>

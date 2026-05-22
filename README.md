@@ -1,10 +1,10 @@
 # Teclians
 
-**Education Analytics and Student Performance Monitoring System** — a web platform for digitizing attendance and academic records, visualizing trends, and supporting decisions for teachers, students, school administrators, and education authorities.
+**Education Analytics and Student Performance Monitoring System** — a web platform for digitizing attendance and academic records, visualizing trends, and supporting decisions for lecturers, students, school administrators, and education authorities.
 
 ## Features
 
-- **Teachers** — Record attendance and grades; monitor class performance and trends
+- **Lecturers (college)** / **Teachers (high school)** — Record attendance and grades; monitor class performance and trends
 - **Students** — View personal attendance, grades, and progress charts
 - **School admins** — School-wide analytics, class overview, attendance trends
 - **Education authorities** — Multi-school comparison and district-level insights
@@ -60,7 +60,8 @@ Check the server is ready: [http://localhost:3000/api/health](http://localhost:3
 
 | Role | Login | Password |
 |------|--------|----------|
-| Teacher (CST) | Karmagayley.cst@rub.edu.bt | password123 |
+| Lecturer (CST) | Karmagayley.cst@rub.edu.bt | password123 |
+| Teacher (Motithang HSS) | teacher@education.gov.bt | password123 |
 | Student (CST) — Norzin Wangmo, Software Engineering Year 1 | 02250359.cst | password123 |
 | Student (Motithang HSS) — Tashi phuntsho | 201.00310.11.0036 | password123 |
 | Admin (CST) | admin@rub.edu.bt | password123 |
@@ -84,7 +85,7 @@ This system supports the goals outlined in the project brief:
 
 1. Digitize attendance and academic record management
 2. Provide visual dashboards for student performance
-3. Help teachers monitor attendance and academic trends
+3. Help lecturers monitor attendance and academic trends
 4. Enable students to view their own records and progress
 5. Support administrators with school-wide analytics
 6. Provide authorities with aggregated educational insights

@@ -32,7 +32,7 @@ export async function POST(request: Request) {
 
   if (!ALLOWED_CREATE_ROLES.includes(roleInput as Role)) {
     return NextResponse.json(
-      { error: "Only Teacher or Lecturer accounts can be created here" },
+      { error: "Only teacher or lecturer accounts can be created here" },
       { status: 400 },
     );
   }
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
   if (modules.length === 0) {
     return NextResponse.json(
-      { error: "Select at least one module the teacher will teach" },
+      { error: "Select at least one module they will teach" },
       { status: 400 },
     );
   }

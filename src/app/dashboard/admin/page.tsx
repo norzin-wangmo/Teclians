@@ -7,23 +7,30 @@ import { DataPanel } from "@/components/ui/data-panel";
 import { PrivacyNotice } from "@/components/ui/privacy-notice";
 import { requireSession } from "@/lib/auth";
 import { getMonthlyAttendanceTrend, getSchoolAnalytics } from "@/lib/analytics";
+import { teachingStaffLabel, teachingStaffPlural } from "@/lib/copy";
 import { adminNav } from "@/lib/nav";
 import { prisma } from "@/lib/prisma";
-import { formatInstitution } from "@/lib/school";
+import { formatInstitution, getSchoolSettings } from "@/lib/school";
 import { summarizeAttendance } from "@/lib/analytics";
 
 export default async function AdminDashboardPage() {
   const user = await requireSession(["ADMIN"]);
   if (!user.schoolId) {
     return (
-      <DashboardShell user={user} title="School administrator dashboard" nav={adminNav}>
+      <DashboardShell user={user} title="School administrator dashboard" nav={adminNav()}>
         <p className="text-sm text-[var(--muted)]">No school is linked to this account.</p>
       </DashboardShell>
     );
   }
 
-  const school = await getSchoolAnalytics(user.schoolId);
-  const trend = await getMonthlyAttendanceTrend({ schoolId: user.schoolId });
+  const [school, settings, trend] = await Promise.all([
+    getSchoolAnalytics(user.schoolId),
+    getSchoolSettings(user.schoolId),
+    getMonthlyAttendanceTrend({ schoolId: user.schoolId }),
+  ]);
+  const nav = adminNav(settings?.institutionLevel);
+  const staffLabel = teachingStaffLabel(settings?.institutionLevel);
+  const staffPlural = teachingStaffPlural(settings?.institutionLevel);
 
   const classes = await prisma.class.findMany({
     where: { schoolId: user.schoolId },
@@ -72,10 +79,10 @@ export default async function AdminDashboardPage() {
       title="School administration"
       subtitle={
         school
-          ? `${formatInstitution({ name: school.schoolName, university: school.universityName }).full} · ${school.district} — use the menu for cohort performance, students, and teachers.`
+          ? `${formatInstitution({ name: school.schoolName, university: school.universityName }).full} · ${school.district} — use the menu for cohort performance, students, and ${staffPlural.toLowerCase()}.`
           : "School-wide analytics"
       }
-      nav={adminNav}
+      nav={nav}
     >
       <PrivacyNotice />
 
@@ -93,7 +100,7 @@ export default async function AdminDashboardPage() {
             <StatCard
               label="Average grade"
               value={`${school.averageGrade}%`}
-              hint={`${teachers} teachers`}
+              hint={`${teachers} ${staffPlural.toLowerCase()}`}
               icon={GraduationCap}
               tone="rose"
             />
@@ -117,7 +124,7 @@ export default async function AdminDashboardPage() {
                     <div>
                       <p className="font-medium text-slate-900">{cls.name}</p>
                       <p className="text-[var(--muted)]">
-                        {cls.subject} · Teacher: {cls.teacher.name}
+                        {cls.subject} · {staffLabel}: {cls.teacher.name}
                       </p>
                     </div>
                     {stats ? (

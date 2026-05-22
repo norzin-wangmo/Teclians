@@ -8,10 +8,12 @@ import { prisma } from "@/lib/prisma";
 
 export default async function AdminStudentsPage() {
   const user = await requireSession(["ADMIN"]);
+  const schoolMeta = user.schoolId ? await getSchoolSettings(user.schoolId) : null;
+  const nav = adminNav(schoolMeta?.institutionLevel);
 
   if (!user.schoolId) {
     return (
-      <DashboardShell user={user} title="Student management" nav={adminNav}>
+      <DashboardShell user={user} title="Student management" nav={nav}>
         <p className="text-sm text-[var(--muted)]">No school linked to this account.</p>
       </DashboardShell>
     );
@@ -29,7 +31,7 @@ export default async function AdminStudentsPage() {
 
   if (!school) {
     return (
-      <DashboardShell user={user} title="Student management" nav={adminNav}>
+      <DashboardShell user={user} title="Student management" nav={nav}>
         <p className="text-sm text-[var(--muted)]">
           Your institution record could not be loaded. Sign out and sign in again.
         </p>
@@ -42,7 +44,7 @@ export default async function AdminStudentsPage() {
       user={user}
       title="Student management"
       subtitle="Choose a class to view students sorted by year and department."
-      nav={adminNav}
+      nav={nav}
     >
       <AdminStudentsByClass
         classes={classes}

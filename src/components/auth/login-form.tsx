@@ -6,12 +6,17 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { EDUCATION_EMAIL_HINT } from "@/lib/email-policy";
 
 const demoAccounts = [
-  { role: "Teacher (CST)", login: "Karmagayley.cst@rub.edu.bt", hint: "education email" },
+  { role: "Lecturer (CST)", login: "Karmagayley.cst@rub.edu.bt", hint: "education email" },
   { role: "Student (CST)", login: "02250359.cst", hint: "student ID" },
   {
     role: "Student (Motithang HSS)",
     login: "201.00310.11.0036",
     hint: "student ID",
+  },
+  {
+    role: "Teacher (Motithang HSS)",
+    login: "teacher@education.gov.bt",
+    hint: "education email",
   },
   { role: "School Administrator", login: "admin@rub.edu.bt", hint: "education email" },
   { role: "Ministry Official", login: "authority@education.gov", hint: "education email" },
@@ -110,7 +115,7 @@ export function LoginForm() {
           ))}
         </ul>
         <p className="mt-2 text-xs text-[var(--muted)]">
-          CST: Norzin Wangmo · Motithang HSS: Tashi phuntsho · Teacher: Karma Gayley · Password:
+          CST lecturer: Karma Gayley · Motithang teacher: Teacher Motithang · Password:
           password123
         </p>
         <p className="mt-2 text-xs text-[var(--muted)]">{EDUCATION_EMAIL_HINT}</p>

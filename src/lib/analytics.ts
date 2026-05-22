@@ -4,9 +4,11 @@ import type {
   AttendanceSummary,
   ClassAnalytics,
   GradeSummary,
+  ModuleAnalytics,
   SchoolAnalytics,
   SubjectPerformance,
 } from "@/lib/types";
+import { currentSemesterRange } from "@/lib/semester";
 
 function attendanceRate(counts: AttendanceSummary): number {
   const total =
@@ -169,6 +171,37 @@ export async function getSchoolAnalytics(schoolId: string): Promise<SchoolAnalyt
     studentCount: school.users.length,
     classCount: school.classes.length,
   };
+}
+
+export async function getTeacherModuleAnalytics(teacherId: string): Promise<ModuleAnalytics[]> {
+  const [subjects, { start, end }] = await Promise.all([
+    getSubjectWisePerformance({ teacherId }),
+    Promise.resolve(currentSemesterRange()),
+  ]);
+
+  const records = await prisma.attendanceRecord.findMany({
+    where: {
+      class: { teacherId },
+      date: { gte: start, lte: end },
+    },
+    select: { date: true, class: { select: { subject: true } } },
+  });
+
+  const sessionsByModule = new Map<string, Set<string>>();
+  for (const record of records) {
+    const day = record.date.toISOString().slice(0, 10);
+    const moduleName = record.class.subject;
+    const bucket = sessionsByModule.get(moduleName) ?? new Set<string>();
+    bucket.add(day);
+    sessionsByModule.set(moduleName, bucket);
+  }
+
+  return subjects.map((entry) => ({
+    module: entry.subject,
+    attendanceRate: entry.attendanceRate,
+    averageGrade: entry.averageGrade,
+    sessionsHeld: sessionsByModule.get(entry.subject)?.size ?? 0,
+  }));
 }
 
 export async function getSubjectWisePerformance(filter: {

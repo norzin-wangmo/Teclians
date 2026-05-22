@@ -1,6 +1,6 @@
 import type { Role } from "@prisma/client";
 
-/** Roles that teach classes (teacher and lecturer). */
+/** College staff use LECTURER; school (high school) staff use TEACHER. */
 export const STAFF_TEACHING_ROLES: Role[] = ["TEACHER", "LECTURER"];
 
 export function isTeachingStaff(role: Role): boolean {

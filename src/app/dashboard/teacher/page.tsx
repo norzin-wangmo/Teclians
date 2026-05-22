@@ -4,7 +4,7 @@ import { StatCard } from "@/components/ui/stat-card";
 import { requireSession } from "@/lib/auth";
 import { getTeacherClassAnalytics } from "@/lib/analytics";
 import { getInstitutionBranding } from "@/lib/institution";
-import { teacherNav } from "@/lib/nav";
+import { lecturerNav } from "@/lib/nav";
 import { STAFF_TEACHING_ROLES } from "@/lib/roles";
 import { getTeacherClassesWithStudents } from "@/lib/teacher";
 
@@ -27,9 +27,9 @@ export default async function TeacherDashboardPage() {
   return (
     <DashboardShell
       user={user}
-      title="Teacher dashboard"
+      title="Lecturer dashboard"
       subtitle="Use the menu to record attendance and marks, manage students, and view performance."
-      nav={teacherNav}
+      nav={lecturerNav}
       institution={institution}
     >
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

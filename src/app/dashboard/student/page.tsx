@@ -1,10 +1,13 @@
 import { ClipboardCheck, FileText, Lock, TrendingUp } from "lucide-react";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
+import { StudentModulesOverview } from "@/components/student/student-modules-overview";
+import { DataPanel } from "@/components/ui/data-panel";
 import { StatCard } from "@/components/ui/stat-card";
 import { requireSession } from "@/lib/auth";
 import { getStudentAnalytics } from "@/lib/analytics";
 import { getInstitutionBranding } from "@/lib/institution";
 import { studentNav } from "@/lib/nav";
+import { getStudentEnrollmentSummaries } from "@/lib/student-enrollment-summary";
 import { prisma } from "@/lib/prisma";
 
 export default async function StudentDashboardPage() {
@@ -24,9 +27,9 @@ export default async function StudentDashboardPage() {
     );
   }
 
-  const [analytics, enrollments, institution] = await Promise.all([
+  const [analytics, modules, institution] = await Promise.all([
     getStudentAnalytics(user.id),
-    prisma.enrollment.count({ where: { studentId: user.id } }),
+    getStudentEnrollmentSummaries(user.id),
     getInstitutionBranding(user.schoolId),
   ]);
 
@@ -48,12 +51,12 @@ export default async function StudentDashboardPage() {
       <div className="mb-6 flex gap-3 rounded-xl border border-teal-100 bg-teal-50/80 px-4 py-3 text-sm text-teal-900">
         <Lock className="mt-0.5 h-5 w-5 shrink-0" />
         <p>
-          Your account is restricted to <strong>your personal records only</strong>. Use the menu
-          above to open attendance, marks, and trends.
+          Your account is restricted to <strong>your personal records only</strong>. Below are
+          your enrolled modules with attendance and grades; use the menu for full marks and trends.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <StatCard
           label="Attendance rate"
           value={`${analytics.attendance.rate}%`}
@@ -69,12 +72,16 @@ export default async function StudentDashboardPage() {
           tone="blue"
         />
         <StatCard
-          label="Enrolled classes"
-          value={enrollments}
+          label="Enrolled modules"
+          value={modules.length}
           icon={FileText}
           tone="amber"
         />
       </div>
+
+      <DataPanel title="My enrolled modules">
+        <StudentModulesOverview modules={modules} />
+      </DataPanel>
     </DashboardShell>
   );
 }

@@ -1,14 +1,26 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { CohortAtRiskStudent, CohortFilter, ModulePerformance } from "@/lib/admin-class-performance";
+import type {
+  CohortAtRiskStudent,
+  CohortFilter,
+  CohortStudentSummary,
+  ModulePerformance,
+} from "@/lib/admin-class-performance";
 
 export function AdminClassPerformance({
   cohorts,
   dataByCohort,
 }: {
   cohorts: CohortFilter[];
-  dataByCohort: Record<string, { modules: ModulePerformance[]; atRisk: CohortAtRiskStudent[] }>;
+  dataByCohort: Record<
+    string,
+    {
+      modules: ModulePerformance[];
+      atRisk: CohortAtRiskStudent[];
+      allStudents: CohortStudentSummary[];
+    }
+  >;
 }) {
   const [department, setDepartment] = useState(cohorts[0]?.department ?? "");
   const [yearOfStudy, setYearOfStudy] = useState(cohorts[0]?.yearOfStudy ?? "");
@@ -31,6 +43,7 @@ export function AdminClassPerformance({
   const data = dataByCohort[cohortKey];
   const modules = data?.modules ?? [];
   const atRisk = data?.atRisk ?? [];
+  const allStudents = data?.allStudents ?? [];
 
   if (cohorts.length === 0) {
     return (
@@ -111,6 +124,39 @@ export function AdminClassPerformance({
                   <p className="text-xs text-[var(--muted)]">
                     {m.attendanceRate}% attendance · {m.studentCount} students
                   </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div>
+        <h3 className="mb-2 text-sm font-semibold text-slate-900">
+          All students — {department} · {yearOfStudy}
+        </h3>
+        <p className="mb-3 text-xs text-[var(--muted)]">
+          Full cohort roster with attendance and average grade across enrolled modules.
+        </p>
+        {allStudents.length === 0 ? (
+          <p className="text-sm text-[var(--muted)]">No students in this cohort.</p>
+        ) : (
+          <ul className="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-white">
+            {allStudents.map((s) => (
+              <li
+                key={s.id}
+                className={`flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm ${s.atRisk ? "bg-amber-50/60" : ""}`}
+              >
+                <div>
+                  <p className="font-medium text-slate-900">{s.name}</p>
+                  <p className="font-mono text-xs text-[var(--muted)]">ID: {s.studentNumber}</p>
+                </div>
+                <div className="text-right text-xs sm:text-sm">
+                  <p>
+                    <span className="text-[var(--muted)]">Attendance: </span>
+                    <strong className={s.atRisk ? "text-amber-800" : ""}>{s.attendanceRate}%</strong>
+                  </p>
+                  <p className="text-[var(--muted)]">Avg grade: {s.averageGrade}%</p>
                 </div>
               </li>
             ))}

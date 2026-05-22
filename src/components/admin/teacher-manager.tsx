@@ -8,8 +8,10 @@ import {
   formatStaffNameFromEmail,
 } from "@/lib/account-naming";
 import { EDUCATION_EMAIL_HINT } from "@/lib/email-policy";
+import { teachingStaffLabel } from "@/lib/copy";
 import { STAFF_ROLE_LABELS } from "@/lib/roles";
 import { parseModulesTaught } from "@/lib/teaching-modules";
+import type { InstitutionLevel } from "@prisma/client";
 
 type StaffRow = {
   id: string;
@@ -22,16 +24,20 @@ type StaffRow = {
 export function TeacherManager({
   teachers,
   moduleOptions,
+  institutionLevel = "COLLEGE",
 }: {
   teachers: StaffRow[];
   moduleOptions: string[];
+  institutionLevel?: InstitutionLevel;
 }) {
+  const isCollege = institutionLevel === "COLLEGE";
+  const staffLabel = teachingStaffLabel(institutionLevel);
   const router = useRouter();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"TEACHER" | "LECTURER">("TEACHER");
+  const [role, setRole] = useState<"TEACHER" | "LECTURER">(isCollege ? "LECTURER" : "TEACHER");
   const [selectedModules, setSelectedModules] = useState<string[]>([]);
   const [customModule, setCustomModule] = useState("");
   const [message, setMessage] = useState("");
@@ -42,7 +48,7 @@ export function TeacherManager({
     setName("");
     setEmail("");
     setPassword("");
-    setRole("TEACHER");
+    setRole(isCollege ? "LECTURER" : "TEACHER");
     setSelectedModules([]);
     setCustomModule("");
   }
@@ -73,7 +79,7 @@ export function TeacherManager({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (selectedModules.length === 0) {
-      setMessage("Select at least one module the teacher will teach.");
+      setMessage(`Select at least one module the ${staffLabel.toLowerCase()} will teach.`);
       return;
     }
 
@@ -116,7 +122,8 @@ export function TeacherManager({
   return (
     <div className="space-y-6">
       <p className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-900">
-        Only <strong>Teacher</strong> and <strong>Lecturer</strong> accounts can be created here.
+        Only <strong>{staffLabel.toLowerCase()}</strong> accounts can be created here
+        {isCollege ? " (college)" : " (high school)"}.
         Specify which <strong>modules</strong> they teach — a class is created for each module if
         needed. The display name must <strong>start with the education email account</strong>.{" "}
         {EDUCATION_EMAIL_HINT}
@@ -124,7 +131,9 @@ export function TeacherManager({
 
       <form onSubmit={handleSubmit} className="rounded-xl border border-[var(--border)] bg-slate-50 p-4">
         <h3 className="text-sm font-semibold text-slate-900">
-          {editingId ? "Edit staff account" : "Create teacher or lecturer account"}
+          {editingId
+            ? `Edit ${staffLabel.toLowerCase()} account`
+            : `Create ${staffLabel.toLowerCase()} account`}
         </h3>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <div>
@@ -134,8 +143,11 @@ export function TeacherManager({
               onChange={(e) => setRole(e.target.value as "TEACHER" | "LECTURER")}
               className="w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm"
             >
-              <option value="TEACHER">{STAFF_ROLE_LABELS.TEACHER}</option>
-              <option value="LECTURER">{STAFF_ROLE_LABELS.LECTURER}</option>
+              {!isCollege ? (
+                <option value="TEACHER">{STAFF_ROLE_LABELS.TEACHER}</option>
+              ) : (
+                <option value="LECTURER">{STAFF_ROLE_LABELS.LECTURER}</option>
+              )}
             </select>
           </div>
           <div className="sm:col-span-2">

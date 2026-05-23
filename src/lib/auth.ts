@@ -8,7 +8,7 @@ import type { SessionUser } from "@/lib/types";
 import { validateLoginEmail } from "@/lib/email-policy";
 import { isEmailLoginIdentifier } from "@/lib/account-naming";
 
-const COOKIE_NAME = "teclians_session";
+const COOKIE_NAME = "edutrack_session";
 
 function getSecret() {
   const secret = process.env.AUTH_SECRET;

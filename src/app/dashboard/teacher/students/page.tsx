@@ -50,17 +50,16 @@ export default async function TeacherStudentsPage() {
       institution={institution}
     >
       <StudentManagementInfo />
-      <p className="mb-4 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-        New student <strong>login accounts</strong> are created by your school administrator
-        (institutional email required). You can edit and search students enrolled in your
-        classes.
+      <p className="mb-4 rounded-xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm text-brand-900">
+        Add student login accounts for your classes below, or students can self-register at{" "}
+        <strong>/signup</strong>. Enroll each new student in at least one of your classes.
       </p>
       <StudentManager
         classes={classes.map((c) => ({ id: c.id, name: c.name }))}
         students={students}
         schoolEmailDomain={school.emailDomain}
         institutionLevel={school.institutionLevel}
-        allowCreate={false}
+        allowCreate
         allowEditStudentId={false}
       />
     </DashboardShell>

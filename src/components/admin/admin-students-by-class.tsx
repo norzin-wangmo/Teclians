@@ -53,7 +53,7 @@ export function AdminStudentsByClass({
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+      <div className="rounded-xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm text-brand-900">
         Select a <strong>class</strong> first to view and manage students enrolled in that class.
         Students are sorted by year of study, then department, then name.
       </div>
@@ -98,7 +98,7 @@ export function AdminStudentsByClass({
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search in this class…"
-                className="w-full rounded-lg border border-[var(--border)] bg-white py-2 pl-9 pr-3 text-sm outline-none ring-blue-500 focus:ring-2"
+                className="w-full rounded-lg border border-[var(--border)] bg-white py-2 pl-9 pr-3 text-sm outline-none ring-brand-600 focus:ring-2"
               />
             </div>
           </div>

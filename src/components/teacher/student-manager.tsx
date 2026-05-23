@@ -254,7 +254,7 @@ export function StudentManager({
             <button
               type="submit"
               disabled={loading}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+              className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60"
             >
               {loading ? "Saving…" : editingId ? "Save changes" : "Add student"}
             </button>
@@ -270,7 +270,7 @@ export function StudentManager({
           </div>
           {message ? (
             <p
-              className={`mt-2 text-sm ${message.includes("deleted") || message.includes("updated") || message.includes("added") ? "text-teal-700" : "text-red-600"}`}
+              className={`mt-2 text-sm ${message.includes("deleted") || message.includes("updated") || message.includes("added") ? "text-brand-700" : "text-red-600"}`}
             >
               {message}
             </p>
@@ -291,7 +291,7 @@ export function StudentManager({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search student ID, email, or class…"
-              className="w-full rounded-lg border border-[var(--border)] bg-white py-2 pl-9 pr-3 text-sm outline-none ring-blue-500 focus:ring-2"
+              className="w-full rounded-lg border border-[var(--border)] bg-white py-2 pl-9 pr-3 text-sm outline-none ring-brand-600 focus:ring-2"
             />
           </div>
         </div>

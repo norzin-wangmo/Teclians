@@ -1,6 +1,7 @@
-import Link from "next/link";
-import { GraduationCap, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { BrandLogo } from "@/components/layout/brand-logo";
 import { InstitutionBadge } from "@/components/layout/institution-badge";
+import { MinistryBadge } from "@/components/layout/ministry-badge";
 import type { InstitutionBranding } from "@/lib/institution";
 import type { SessionUser } from "@/lib/types";
 import { dashboardPath } from "@/lib/auth";
@@ -33,16 +34,13 @@ export function DashboardShell({
     <div className="min-h-screen">
       <header className="border-b border-[var(--border)] bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
-          <Link href={dashboardPath(user.role)} className="flex items-center gap-2.5">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white">
-              <GraduationCap className="h-5 w-5" />
-            </span>
-            <div>
-              <p className="text-sm font-semibold text-slate-900">Teclians</p>
-              <p className="text-xs text-[var(--muted)]">{roleLabels[user.role]}</p>
-            </div>
-          </Link>
+          <BrandLogo
+            href={dashboardPath(user.role)}
+            subtitle={roleLabels[user.role]}
+            nameClassName="text-sm"
+          />
           <div className="flex items-center gap-4">
+            {user.role === "AUTHORITY" ? <MinistryBadge /> : null}
             {institution &&
             (user.role === "TEACHER" ||
               user.role === "LECTURER" ||

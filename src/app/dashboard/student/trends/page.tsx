@@ -31,14 +31,14 @@ export default async function StudentTrendsPage() {
           label="Attendance rate"
           value={`${analytics.attendance.rate}%`}
           icon={TrendingUp}
-          tone="teal"
+          tone="forest"
         />
         <StatCard
           label="Average grade"
           value={`${analytics.grades.averagePercent}%`}
           hint={`${enrollments} class${enrollments === 1 ? "" : "es"}`}
           icon={TrendingUp}
-          tone="blue"
+          tone="brand"
         />
       </div>
       <div className="grid gap-6 lg:grid-cols-2">

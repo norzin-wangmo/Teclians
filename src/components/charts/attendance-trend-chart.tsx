@@ -32,9 +32,9 @@ export function AttendanceTrendChart({ labels, rates }: Props) {
           <Line
             type="monotone"
             dataKey="rate"
-            stroke="#1d4ed8"
+            stroke="#239b76"
             strokeWidth={2.5}
-            dot={{ r: 4, fill: "#1d4ed8" }}
+            dot={{ r: 4, fill: "#239b76" }}
             activeDot={{ r: 6 }}
           />
         </LineChart>

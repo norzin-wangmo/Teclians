@@ -7,7 +7,7 @@ export function PasswordInput({
   id,
   value,
   onChange,
-  className = "w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm outline-none ring-blue-500 focus:ring-2",
+  className = "w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm outline-none ring-brand-600 focus:ring-2",
   placeholder,
   required,
   autoComplete = "current-password",

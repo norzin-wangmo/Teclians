@@ -1,9 +1,12 @@
 import { BarChart3, Building2, FileBarChart, MapPin } from "lucide-react";
+import { MinistryBadge } from "@/components/layout/ministry-badge";
 import { RoleFunctionsPanel } from "@/components/roles/role-functions-panel";
 
 export function MinistryFunctions() {
   return (
-    <RoleFunctionsPanel
+    <div className="mb-8">
+      <MinistryBadge size="lg" className="mb-6 w-fit max-w-full" />
+      <RoleFunctionsPanel
       title="Ministry functions"
       subtitle="Policy-level analysis using summarized, anonymized data — no individual student records."
       items={[
@@ -32,6 +35,7 @@ export function MinistryFunctions() {
           href: "/dashboard/authority/report",
         },
       ]}
-    />
+      />
+    </div>
   );
 }

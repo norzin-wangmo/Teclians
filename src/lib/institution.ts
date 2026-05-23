@@ -29,6 +29,43 @@ export async function getInstitutionBranding(
   };
 }
 
-export function institutionLogoSrc(level: "COLLEGE" | "SCHOOL") {
-  return level === "COLLEGE" ? "/logos/rub.svg" : "/logos/school.svg";
+const INSTITUTION_LOGOS = {
+  cst: "/logos/cst.png",
+  motithang: "/logos/motithang.png",
+  rubCollege: "/logos/rub.svg",
+  school: "/logos/school.svg",
+} as const;
+
+export function institutionLogoSrc(institution: InstitutionBranding): string {
+  if (institution.level === "COLLEGE" && institution.collegeCode === "cst") {
+    return INSTITUTION_LOGOS.cst;
+  }
+
+  if (
+    institution.level === "SCHOOL" &&
+    institution.schoolName.toLowerCase().includes("motithang")
+  ) {
+    return INSTITUTION_LOGOS.motithang;
+  }
+
+  return institution.level === "COLLEGE"
+    ? INSTITUTION_LOGOS.rubCollege
+    : INSTITUTION_LOGOS.school;
+}
+
+export function institutionShortLabel(institution: InstitutionBranding): string {
+  if (institution.level === "COLLEGE" && institution.collegeCode) {
+    return institution.collegeCode.toUpperCase();
+  }
+  if (institution.schoolName.toLowerCase().includes("motithang")) {
+    return "Motithang HSS";
+  }
+  return institution.schoolName.split(" ")[0];
+}
+
+export function institutionHasCustomLogo(institution: InstitutionBranding): boolean {
+  return (
+    (institution.level === "COLLEGE" && institution.collegeCode === "cst") ||
+    institution.schoolName.toLowerCase().includes("motithang")
+  );
 }

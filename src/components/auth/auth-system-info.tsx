@@ -39,7 +39,7 @@ export function AuthSystemInfo() {
       <ul className="mt-4 space-y-3">
         {features.map((f) => (
           <li key={f.title} className="flex gap-3 text-sm">
-            <f.icon className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
+            <f.icon className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />
             <div>
               <p className="font-medium text-slate-900">{f.title}</p>
               <p className="text-xs text-[var(--muted)]">{f.description}</p>

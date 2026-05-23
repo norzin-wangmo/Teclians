@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const COOKIE_NAME = "teclians_session";
+const COOKIE_NAME = "edutrack_session";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

@@ -1,104 +1,68 @@
 import { NextResponse } from "next/server";
-import { hashPassword, requireSessionApi } from "@/lib/auth";
-import {
-  buildStudentEmail,
-  validateStudentNumber,
-} from "@/lib/account-naming";
-import { validateStudentEmail } from "@/lib/email-policy";
+import { createStudentAccount } from "@/lib/create-student";
+import { requireSessionApi } from "@/lib/auth";
+import { isTeachingStaff } from "@/lib/roles";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
-  const session = await requireSessionApi(["ADMIN"]);
+  const session = await requireSessionApi(["ADMIN", "TEACHER", "LECTURER"]);
   if (!session) {
     return NextResponse.json(
       {
         error:
-          "Only school administrators can create student login accounts. Teachers and lecturers are added under Staff accounts.",
+          "Only school administrators and teaching staff can create student login accounts.",
       },
       { status: 403 },
     );
   }
 
-  const body = await request.json();
-  const studentNumber = String(body.studentNumber ?? "").trim();
-  const displayName = String(body.displayName ?? body.fullName ?? "").trim();
-  const department = String(body.department ?? "").trim() || undefined;
-  const yearOfStudy = String(body.yearOfStudy ?? "").trim() || undefined;
-  const password = String(body.password ?? "password123");
-  const classIds = Array.isArray(body.classIds) ? (body.classIds as string[]) : [];
-
-  const idError = validateStudentNumber(studentNumber);
-  if (idError) {
-    return NextResponse.json({ error: idError }, { status: 400 });
-  }
-
-  const schoolId = session.schoolId;
-  if (!schoolId) {
+  if (!session.schoolId) {
     return NextResponse.json({ error: "No school linked to your account" }, { status: 400 });
   }
 
-  const school = await prisma.school.findUnique({ where: { id: schoolId } });
-  if (!school) {
-    return NextResponse.json({ error: "School not found" }, { status: 404 });
+  const body = await request.json();
+  const classIds = Array.isArray(body.classIds) ? (body.classIds as string[]) : [];
+
+  if (isTeachingStaff(session.role) && classIds.length === 0) {
+    return NextResponse.json(
+      { error: "Select at least one of your classes when adding a student" },
+      { status: 400 },
+    );
   }
 
-  const existingId = await prisma.user.findFirst({
-    where: { schoolId, studentNumber },
-  });
-  if (existingId) {
-    return NextResponse.json({ error: "Student ID already exists in this school" }, { status: 409 });
-  }
-
-  const email = buildStudentEmail(studentNumber, {
-    emailDomain: school.emailDomain,
-    institutionLevel: school.institutionLevel,
-  });
-  const emailError = validateStudentEmail(email);
-  if (emailError) {
-    return NextResponse.json({ error: emailError }, { status: 400 });
-  }
-
-  const existingEmail = await prisma.user.findUnique({ where: { email } });
-  if (existingEmail) {
-    return NextResponse.json({ error: "Generated email already in use" }, { status: 409 });
-  }
-
-  const schoolClasses = await prisma.class.findMany({
-    where: { schoolId },
-    select: { id: true },
-  });
-  const allowed = new Set(schoolClasses.map((c) => c.id));
-  for (const classId of classIds) {
-    if (!allowed.has(classId)) {
-      return NextResponse.json({ error: "Class not in your school" }, { status: 400 });
+  if (isTeachingStaff(session.role)) {
+    const teacherClasses = await prisma.class.findMany({
+      where: { teacherId: session.id },
+      select: { id: true },
+    });
+    const allowed = new Set(teacherClasses.map((c) => c.id));
+    for (const classId of classIds) {
+      if (!allowed.has(classId)) {
+        return NextResponse.json(
+          { error: "You can only enroll students in classes you teach" },
+          { status: 403 },
+        );
+      }
     }
   }
 
-  const passwordHash = await hashPassword(password);
-  const student = await prisma.user.create({
-    data: {
-      name: displayName || studentNumber,
-      studentNumber,
-      email,
-      department,
-      yearOfStudy,
-      passwordHash,
-      role: "STUDENT",
-      schoolId,
-    },
+  const result = await createStudentAccount({
+    schoolId: session.schoolId,
+    studentNumber: String(body.studentNumber ?? ""),
+    displayName: String(body.displayName ?? body.fullName ?? ""),
+    department: String(body.department ?? ""),
+    yearOfStudy: String(body.yearOfStudy ?? ""),
+    password: String(body.password ?? "password123"),
+    classIds,
   });
 
-  for (const classId of classIds) {
-    await prisma.enrollment.upsert({
-      where: { studentId_classId: { studentId: student.id, classId } },
-      create: { studentId: student.id, classId },
-      update: {},
-    });
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: result.status });
   }
 
   return NextResponse.json({
-    id: student.id,
-    studentNumber: student.studentNumber,
-    email: student.email,
+    id: result.id,
+    studentNumber: result.studentNumber,
+    email: result.email,
   });
 }

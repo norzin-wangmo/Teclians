@@ -63,7 +63,7 @@ export function StudentModulesOverview({ modules }: { modules: StudentClassSumma
                   Classes missed
                 </p>
                 {mod.missedSessions.length === 0 ? (
-                  <p className="mt-1 text-teal-800">No missed classes recorded</p>
+                  <p className="mt-1 text-brand-800">No missed classes recorded</p>
                 ) : (
                   <p className="mt-1 font-semibold text-slate-900">
                     {mod.missedSessions.length} missed session

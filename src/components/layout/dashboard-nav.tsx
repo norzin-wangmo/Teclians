@@ -20,7 +20,7 @@ export function DashboardNav({ items }: { items: NavItem[] }) {
             href={item.href}
             className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
               active
-                ? "bg-blue-600 text-white"
+                ? "bg-brand-600 text-white"
                 : "border border-[var(--border)] bg-white text-slate-700 hover:bg-slate-50"
             }`}
           >

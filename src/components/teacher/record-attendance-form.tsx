@@ -167,7 +167,7 @@ export function RecordAttendanceForm({ classes }: { classes: TeacherClassOption[
         <button
           type="button"
           onClick={markAllPresent}
-          className="text-sm font-medium text-blue-700 hover:underline"
+          className="text-sm font-medium text-brand-700 hover:underline"
         >
           Mark all present
         </button>
@@ -190,7 +190,7 @@ export function RecordAttendanceForm({ classes }: { classes: TeacherClassOption[
                     type="checkbox"
                     checked={present}
                     onChange={(e) => setPresent(student.id, e.target.checked)}
-                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-600"
                   />
                   <span className="min-w-0">
                     <span className="font-medium text-slate-900">{student.name}</span>
@@ -222,13 +222,13 @@ export function RecordAttendanceForm({ classes }: { classes: TeacherClassOption[
         <button
           type="submit"
           disabled={loading || loadingRecords || students.length === 0}
-          className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+          className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60"
         >
           {loading ? "Saving…" : "Save attendance"}
         </button>
         {message ? (
           <p
-            className={`mt-2 text-sm ${message.includes("saved") ? "text-teal-700" : "text-red-600"}`}
+            className={`mt-2 text-sm ${message.includes("saved") ? "text-brand-700" : "text-red-600"}`}
           >
             {message}
           </p>

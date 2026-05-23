@@ -33,13 +33,13 @@ export default async function TeacherDashboardPage() {
       institution={institution}
     >
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <StatCard label="Classes" value={classOptions.length} icon={BookOpen} tone="blue" />
+        <StatCard label="Classes" value={classOptions.length} icon={BookOpen} tone="brand" />
         <StatCard
           label="Students"
           value={studentCount}
           hint="Across all your classes"
           icon={Users}
-          tone="teal"
+          tone="forest"
         />
         <StatCard
           label="Avg attendance"

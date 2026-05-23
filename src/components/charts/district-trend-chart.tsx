@@ -35,8 +35,8 @@ export function DistrictTrendChart({ districts }: { districts: DistrictSummary[]
           <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} stroke="#94a3b8" />
           <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0" }} />
           <Legend />
-          <Bar dataKey="attendance" name="Avg attendance %" fill="#1d4ed8" radius={[6, 6, 0, 0]} />
-          <Bar dataKey="grades" name="Avg grade %" fill="#0d9488" radius={[6, 6, 0, 0]} />
+          <Bar dataKey="attendance" name="Avg attendance %" fill="#239b76" radius={[6, 6, 0, 0]} />
+          <Bar dataKey="grades" name="Avg grade %" fill="#1d8263" radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

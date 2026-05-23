@@ -26,7 +26,7 @@ export function RoleFunctionsPanel({
           const Icon = fn.icon;
           const inner = (
             <>
-              <Icon className="mb-2 h-5 w-5 text-blue-600" />
+              <Icon className="mb-2 h-5 w-5 text-brand-600" />
               <p className="font-medium text-slate-900">{fn.title}</p>
               <p className="mt-1 text-xs text-[var(--muted)]">{fn.description}</p>
             </>
@@ -37,7 +37,7 @@ export function RoleFunctionsPanel({
               {fn.href ? (
                 <Link
                   href={fn.href}
-                  className="block h-full rounded-xl border border-[var(--border)] bg-slate-50 p-4 transition hover:border-blue-200 hover:bg-blue-50/50"
+                  className="block h-full rounded-xl border border-[var(--border)] bg-slate-50 p-4 transition hover:border-brand-200 hover:bg-brand-50/50"
                 >
                   {inner}
                 </Link>

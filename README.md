@@ -1,4 +1,4 @@
-# Teclians
+# Edu Track
 
 **Education Analytics and Student Performance Monitoring System** — a web platform for digitizing attendance and academic records, visualizing trends, and supporting decisions for lecturers, students, school administrators, and education authorities.
 

@@ -58,8 +58,8 @@ export default async function AuthorityDashboardPage() {
       </div>
 
       <div id="analytics" className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Schools" value={schools.length} icon={Building2} tone="blue" />
-        <StatCard label="Total students" value={totalStudents} icon={TrendingUp} tone="teal" />
+        <StatCard label="Schools" value={schools.length} icon={Building2} tone="brand" />
+        <StatCard label="Total students" value={totalStudents} icon={TrendingUp} tone="forest" />
         <StatCard label="Avg attendance" value={`${avgAttendance}%`} icon={MapPin} tone="amber" />
         <StatCard
           label="Avg grade"

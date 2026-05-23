@@ -30,8 +30,8 @@ export function SchoolComparisonChart({ schools }: { schools: SchoolAnalytics[] 
           <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12 }} />
           <YAxis type="category" dataKey="school" width={120} tick={{ fontSize: 12 }} />
           <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0" }} />
-          <Bar dataKey="attendance" name="Attendance %" fill="#1d4ed8" radius={[0, 4, 4, 0]} />
-          <Bar dataKey="grades" name="Avg Grade %" fill="#0d9488" radius={[0, 4, 4, 0]} />
+          <Bar dataKey="attendance" name="Attendance %" fill="#239b76" radius={[0, 4, 4, 0]} />
+          <Bar dataKey="grades" name="Avg Grade %" fill="#1d8263" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

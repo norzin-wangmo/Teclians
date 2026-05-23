@@ -160,7 +160,7 @@ export function RecordAssignmentMarksForm({ classes }: { classes: TeacherClassOp
         <button
           type="button"
           onClick={() => fillAllScores("")}
-          className="text-sm font-medium text-blue-700 hover:underline"
+          className="text-sm font-medium text-brand-700 hover:underline"
         >
           Clear all
         </button>
@@ -203,13 +203,13 @@ export function RecordAssignmentMarksForm({ classes }: { classes: TeacherClassOp
         <button
           type="submit"
           disabled={loading || students.length === 0}
-          className="rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:opacity-60"
+          className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60"
         >
           {loading ? "Saving…" : "Save marks"}
         </button>
         {message ? (
           <p
-            className={`mt-2 text-sm ${message.includes("Saved") ? "text-teal-700" : "text-red-600"}`}
+            className={`mt-2 text-sm ${message.includes("Saved") ? "text-brand-700" : "text-red-600"}`}
           >
             {message}
           </p>

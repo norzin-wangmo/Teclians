@@ -89,8 +89,8 @@ export default async function AdminDashboardPage() {
       {school ? (
         <>
           <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard label="Students" value={school.studentCount} icon={Users} tone="blue" />
-            <StatCard label="Classes" value={school.classCount} icon={GraduationCap} tone="teal" />
+            <StatCard label="Students" value={school.studentCount} icon={Users} tone="brand" />
+            <StatCard label="Classes" value={school.classCount} icon={GraduationCap} tone="forest" />
             <StatCard
               label="Attendance rate"
               value={`${school.attendanceRate}%`}

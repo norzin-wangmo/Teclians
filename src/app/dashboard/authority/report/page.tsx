@@ -1,5 +1,7 @@
 import { DashboardShell } from "@/components/layout/dashboard-shell";
+import { MinistryBadge } from "@/components/layout/ministry-badge";
 import { PrintReportButton } from "@/components/reports/print-report-button";
+import { MINISTRY_NAME } from "@/lib/brand";
 import { PrivacyNotice } from "@/components/ui/privacy-notice";
 import { requireSession } from "@/lib/auth";
 import { getAuthorityAnalytics } from "@/lib/analytics";
@@ -53,8 +55,9 @@ export default async function AuthorityReportPage() {
 
       <article className="report-document space-y-6 rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-8">
         <header className="border-b border-[var(--border)] pb-4">
+          <MinistryBadge size="md" className="mb-4" />
           <h2 className="text-xl font-semibold text-slate-900">
-            Education Ministry — Regional Summary
+            {MINISTRY_NAME} — Regional Summary
           </h2>
           <p className="text-sm text-[var(--muted)]">
             Comparative school performance · expandable to nationwide monitoring

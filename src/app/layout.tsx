@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Teclians — Education Analytics",
+  title: "Edu Track — Education Analytics",
   description:
-    "Student performance monitoring, attendance tracking, and educational analytics for schools.",
+    "Student performance monitoring, attendance tracking, and educational analytics for schools and colleges.",
 };
 
 export default function RootLayout({

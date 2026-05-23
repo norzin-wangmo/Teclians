@@ -173,7 +173,7 @@ export function AdminClassPerformance({
           under 90%.
         </p>
         {atRisk.length === 0 ? (
-          <p className="rounded-xl border border-teal-100 bg-teal-50 px-4 py-3 text-sm text-teal-800">
+          <p className="rounded-xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm text-brand-800">
             No students below 90% attendance in this cohort.
           </p>
         ) : (

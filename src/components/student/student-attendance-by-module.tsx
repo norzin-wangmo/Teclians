@@ -16,13 +16,13 @@ function formatSessionDate(iso: string) {
 function statusStyles(status: AttendanceStatus) {
   switch (status) {
     case "PRESENT":
-      return "bg-teal-50 text-teal-800";
+      return "bg-brand-50 text-brand-800";
     case "ABSENT":
       return "bg-red-50 text-red-800";
     case "LATE":
       return "bg-amber-50 text-amber-900";
     case "EXCUSED":
-      return "bg-blue-50 text-blue-800";
+      return "bg-brand-50 text-brand-800";
     default:
       return "bg-slate-100 text-slate-700";
   }

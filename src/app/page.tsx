@@ -1,12 +1,6 @@
 import Link from "next/link";
-import {
-  BarChart3,
-  GraduationCap,
-  LineChart,
-  School,
-  Shield,
-  Users,
-} from "lucide-react";
+import { BarChart3, LineChart, School, Shield, Users } from "lucide-react";
+import { BrandLogo } from "@/components/layout/brand-logo";
 import { dashboardPath, resolveSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
@@ -56,24 +50,27 @@ export default async function HomePage() {
     <div className="min-h-screen">
       <header className="border-b border-[var(--border)] bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white">
-              <GraduationCap className="h-5 w-5" />
-            </span>
-            <span className="text-lg font-semibold text-slate-900">Teclians</span>
+          <BrandLogo />
+          <div className="flex items-center gap-2">
+            <Link
+              href="/signup"
+              className="rounded-xl border border-[var(--border)] bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+            >
+              Sign up
+            </Link>
+            <Link
+              href="/login"
+              className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
+            >
+              Sign in
+            </Link>
           </div>
-          <Link
-            href="/login"
-            className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-          >
-            Sign in
-          </Link>
         </div>
       </header>
 
       <main>
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-700">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-700">
             Education Analytics Platform
           </p>
           <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
@@ -90,11 +87,17 @@ export default async function HomePage() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
+              href="/signup"
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+            >
+              Student sign up
+            </Link>
+            <Link
               href="/login"
-              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
             >
               <BarChart3 className="h-4 w-4" />
-              Open dashboard
+              Sign in
             </Link>
           </div>
         </section>
@@ -109,7 +112,7 @@ export default async function HomePage() {
               {roles.map((role) => (
                 <span
                   key={role}
-                  className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-sm text-blue-800"
+                  className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-sm text-brand-800"
                 >
                   {role}
                 </span>
@@ -135,7 +138,7 @@ export default async function HomePage() {
                 key={feature.title}
                 className="rounded-2xl border border-[var(--border)] bg-[var(--background)] p-5"
               >
-                <feature.icon className="mb-3 h-6 w-6 text-blue-600" />
+                <feature.icon className="mb-3 h-6 w-6 text-brand-600" />
                 <h2 className="font-semibold text-slate-900">{feature.title}</h2>
                 <p className="mt-2 text-sm text-[var(--muted)]">{feature.description}</p>
               </article>

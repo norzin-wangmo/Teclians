@@ -38,8 +38,8 @@ export function ClassPerformanceChart({ classes }: { classes: ClassAnalytics[] }
           <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} stroke="#94a3b8" />
           <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0" }} />
           <Legend />
-          <Bar dataKey="attendance" name="Attendance %" fill="#1d4ed8" radius={[6, 6, 0, 0]} />
-          <Bar dataKey="grades" name="Avg Grade %" fill="#0d9488" radius={[6, 6, 0, 0]} />
+          <Bar dataKey="attendance" name="Attendance %" fill="#239b76" radius={[6, 6, 0, 0]} />
+          <Bar dataKey="grades" name="Avg Grade %" fill="#1d8263" radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

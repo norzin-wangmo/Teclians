@@ -78,7 +78,7 @@ export function CsvImportForm() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:opacity-60"
+          className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60"
         >
           {loading ? "Importing…" : "Upload & import"}
         </button>

@@ -121,7 +121,7 @@ export function TeacherManager({
 
   return (
     <div className="space-y-6">
-      <p className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+      <p className="rounded-xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm text-brand-900">
         Only <strong>{staffLabel.toLowerCase()}</strong> accounts can be created here
         {isCollege ? " (college)" : " (high school)"}.
         Specify which <strong>modules</strong> they teach — a class is created for each module if
@@ -188,7 +188,7 @@ export function TeacherManager({
             <PasswordInput
               value={password}
               onChange={setPassword}
-              className="w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm outline-none ring-blue-500 focus:ring-2"
+              className="w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm outline-none ring-brand-600 focus:ring-2"
             />
           </div>
         </div>
@@ -231,7 +231,7 @@ export function TeacherManager({
           <button
             type="submit"
             disabled={loading}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60"
           >
             {loading ? "Saving…" : editingId ? "Save changes" : "Create account"}
           </button>
@@ -247,7 +247,7 @@ export function TeacherManager({
         </div>
         {message ? (
           <p
-            className={`mt-2 text-sm ${message.includes("created") || message.includes("updated") ? "text-teal-700" : "text-red-600"}`}
+            className={`mt-2 text-sm ${message.includes("created") || message.includes("updated") ? "text-brand-700" : "text-red-600"}`}
           >
             {message}
           </p>

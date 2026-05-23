@@ -48,7 +48,7 @@ export default async function StudentDashboardPage() {
       nav={studentNav}
       institution={institution}
     >
-      <div className="mb-6 flex gap-3 rounded-xl border border-teal-100 bg-teal-50/80 px-4 py-3 text-sm text-teal-900">
+      <div className="mb-6 flex gap-3 rounded-xl border border-brand-100 bg-brand-50/80 px-4 py-3 text-sm text-brand-900">
         <Lock className="mt-0.5 h-5 w-5 shrink-0" />
         <p>
           Your account is restricted to <strong>your personal records only</strong>. Below are
@@ -62,14 +62,14 @@ export default async function StudentDashboardPage() {
           value={`${analytics.attendance.rate}%`}
           hint={`${analytics.attendance.present} present · ${analytics.attendance.absent} absent`}
           icon={ClipboardCheck}
-          tone="teal"
+          tone="forest"
         />
         <StatCard
           label="Average grade"
           value={`${analytics.grades.averagePercent}%`}
           hint={`${analytics.grades.count} assessments`}
           icon={TrendingUp}
-          tone="blue"
+          tone="brand"
         />
         <StatCard
           label="Enrolled modules"

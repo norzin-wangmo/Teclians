@@ -61,7 +61,7 @@ export function GradeEditor({ grades }: { grades: GradeRow[] }) {
       {editingId ? (
         <form
           onSubmit={handleUpdate}
-          className="rounded-xl border border-blue-200 bg-blue-50/50 p-4 text-sm"
+          className="rounded-xl border border-brand-200 bg-brand-50/50 p-4 text-sm"
         >
           <p className="font-medium text-slate-900">Update mark</p>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
@@ -85,7 +85,7 @@ export function GradeEditor({ grades }: { grades: GradeRow[] }) {
             <button
               type="submit"
               disabled={loading}
-              className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white"
+              className="rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white"
             >
               Save
             </button>
@@ -116,7 +116,7 @@ export function GradeEditor({ grades }: { grades: GradeRow[] }) {
               <button
                 type="button"
                 onClick={() => startEdit(grade)}
-                className="text-xs font-medium text-blue-700 hover:underline"
+                className="text-xs font-medium text-brand-700 hover:underline"
               >
                 Update
               </button>
@@ -124,7 +124,7 @@ export function GradeEditor({ grades }: { grades: GradeRow[] }) {
           </li>
         ))}
       </ul>
-      {message ? <p className="text-sm text-teal-700">{message}</p> : null}
+      {message ? <p className="text-sm text-brand-700">{message}</p> : null}
     </div>
   );
 }

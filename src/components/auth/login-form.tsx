@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -65,7 +66,7 @@ export function LoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="staff@rub.edu.bt or 201.00310.11.0036"
-          className="w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm outline-none ring-blue-500 focus:ring-2"
+          className="w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm outline-none ring-brand-600 focus:ring-2"
           required
         />
         <p className="mt-1 text-xs text-[var(--muted)]">
@@ -89,10 +90,17 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
+        className="w-full rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:opacity-60"
       >
         {loading ? "Signing in…" : "Sign in"}
       </button>
+
+      <p className="text-center text-sm text-[var(--muted)]">
+        New student?{" "}
+        <Link href="/signup" className="font-medium text-brand-700 hover:underline">
+          Create an account
+        </Link>
+      </p>
 
       <div className="rounded-xl border border-dashed border-[var(--border)] bg-slate-50 p-4">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
@@ -107,7 +115,7 @@ export function LoginForm() {
                   setEmail(account.login);
                   setPassword("password123");
                 }}
-                className="text-left text-sm text-blue-700 hover:underline"
+                className="text-left text-sm text-brand-700 hover:underline"
               >
                 {account.role} ({account.hint}): {account.login}
               </button>

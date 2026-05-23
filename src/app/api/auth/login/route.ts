@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { isEmailLoginIdentifier } from "@/lib/account-naming";
 import { createSession, dashboardPath, verifyCredentials } from "@/lib/auth";
-import { validateLoginEmail } from "@/lib/email-policy";
+import { isEducationEmail, validateLoginEmail } from "@/lib/email-policy";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
   try {
@@ -25,17 +26,41 @@ export async function POST(request: Request) {
 
     if (isEmailLoginIdentifier(identifier)) {
       const email = identifier.toLowerCase();
+
+      if (!isEducationEmail(email)) {
+        return NextResponse.json(
+          {
+            error:
+              "Personal email addresses (e.g. Gmail) cannot be used. Staff need an institutional education email. Students must sign up or sign in with their student ID only.",
+          },
+          { status: 403 },
+        );
+      }
+
       const emailError = validateLoginEmail(email);
       if (emailError) {
         return NextResponse.json({ error: emailError }, { status: 403 });
+      }
+
+      const existing = await prisma.user.findUnique({
+        where: { email },
+        select: { role: true, studentNumber: true },
+      });
+      if (existing?.role === "STUDENT" && existing.studentNumber) {
+        return NextResponse.json(
+          {
+            error: `Students sign in with student ID only (try: ${existing.studentNumber}), not your email address.`,
+          },
+          { status: 401 },
+        );
       }
     }
 
     const user = await verifyCredentials(identifier, password);
     if (!user) {
       const message = isEmailLoginIdentifier(identifier)
-        ? "Invalid email or password, or account is not an approved education address"
-        : "Invalid student ID or password";
+        ? "Invalid email or password. New students: sign up at /signup. Staff accounts are created by your school administrator."
+        : "Invalid student ID or password. New students can create an account at /signup.";
       return NextResponse.json(
         {
           error: `${message} If this is a new machine, run: npm run setup`,
